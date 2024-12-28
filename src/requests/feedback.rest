@@ -1,0 +1,11 @@
+@hostname = localhost
+@port = {{$dotenv PORT}}
+@host = {{hostname}}:{{port}}
+
+POST http://{{host}}/api/feedback
+Content-Type: application/json
+
+{
+    "message": "Amazing service!",
+    "rating": "4"
+}

@@ -1,0 +1,76 @@
+@hostname = localhost
+@port = {{$dotenv PORT}}
+@host = {{hostname}}:{{port}}
+@token = {{login.response.body.$.token}}
+@user_id = {{login.response.body.$.id}}
+
+### Login (we'll authenticase as a user that has role set to admin)
+# @name login
+POST http://{{host}}/api/auth
+Content-Type: application/json
+
+{
+    "username": "whoami666",
+    "password": "root66"
+}
+
+### Add some products to user's shopping cart
+### products id, title, user id etc would be passed more "automatically" in the request body in a frontend app
+POST http://{{host}}/api/cart
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "product_id": "ecabd2e8-dc30-4c58-9755-58a11ab0829c",
+    "product_title": "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s",
+    "product_price": 79.99,
+    "quantity": 2,
+    "user_id": "6ed925b7-a2e1-4896-9d44-cc9c79d3176e"
+}
+
+###
+POST http://{{host}}/api/cart
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "product_id": "1cd63a48-8ead-4987-83b3-4603f75aebb9",
+    "product_title": "Mens Cotton Jacket",
+    "product_price": 55.99,
+    "quantity": 1,
+    "user_id": "6ed925b7-a2e1-4896-9d44-cc9c79d3176e"
+}
+
+### Get all the shopping cart items that have a reference to user's ID (visible only to the user)
+GET http://{{host}}/api/cart/{{user_id}}
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+### Send order with items from user's shopping cart
+POST http://{{host}}/api/orders
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "products": ["SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s", "SanDisk SSD PLUS 1TB Internal SSD - SATA III 6 Gb/s", "Mens Cotton Jacket"],
+    "user_id": "6ed925b7-a2e1-4896-9d44-cc9c79d3176e",
+    "cost": 215.97,
+    "delivery_details_first_name": "Admin",
+    "delivery_details_last_name": "User",
+    "delivery_details_email": "address53452@domain.com",
+    "delivery_details_address_line1": "XYZ Street 1",
+    "delivery_details_city": "Jyväskylä",
+    "delivery_details_postal_address": "01234",
+    "delivery_details_country": "Finland"
+}
+
+### Update the order's status (need order id in request params)
+### Only admin can do this
+PUT http://{{host}}/api/orders/600dd5e3-0758-431a-aff6-f7efff1c56bb
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+    "time_estimate": "2 weeks",
+    "status": "processed"
+}

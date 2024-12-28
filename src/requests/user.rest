@@ -1,0 +1,36 @@
+@hostname = localhost
+@port = {{$dotenv PORT}}
+@host = {{hostname}}:{{port}}
+
+### Create user
+POST http://{{host}}/api/users
+Content-Type: application/json
+
+{
+    "username": "user001",
+    "password": "root66",
+    "first_name": "Test",
+    "last_name": "Person",
+    "email": "address001@domain.com",
+    "address_line1": "XYZ Street 1",
+    "city": "Helsinki",
+    "postal_address": "01234",
+    "country": "Finland"
+}
+
+###
+
+POST http://{{host}}/api/users
+Content-Type: application/json
+
+{
+    "username": "whoami666",
+    "password": "root66",
+    "first_name": "Admin",
+    "last_name": "User",
+    "email": "address53452@domain.com",
+    "address_line1": "XYZ Street 1",
+    "city": "Jyväskylä",
+    "postal_address": "01234",
+    "country": "Finland"
+}
